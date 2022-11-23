@@ -20,9 +20,18 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const UsersCollection = client.db("SecondBook").collection("Users");
     const ProductCollection = client.db("SecondBook").collection("Products");
-    const SellerCollection = client.db("SecondBook").collection("Seller");
-    const BuyerCollection = client.db("SecondBook").collection("Buyer");
+    const CategoriesCollection = client
+      .db("SecondBook")
+      .collection("Categories");
+
+    //All Categories
+    app.get("/allCategories", async (req, res) => {
+      let query = {};
+      const Categories = await CategoriesCollection.find(query).toArray();
+      res.send(Categories);
+    });
   } finally {
   }
 }
