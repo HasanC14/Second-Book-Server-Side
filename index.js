@@ -21,8 +21,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const ProductCollection = client.db("SecondBook").collection("Products");
-    const SellerCollection = client.db("DoctorsPortal").collection("Seller");
-    const BuyerCollection = client.db("DoctorsPortal").collection("Buyer");
+    const SellerCollection = client.db("SecondBook").collection("Seller");
+    const BuyerCollection = client.db("SecondBook").collection("Buyer");
   } finally {
   }
 }
