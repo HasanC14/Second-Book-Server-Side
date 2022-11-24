@@ -57,7 +57,7 @@ async function run() {
       if (req.query.email) {
         query = { SellerEmail: req.query.email };
       }
-      const cursor = ReviewCollection.find(query).sort({
+      const cursor = ProductCollection.find(query).sort({
         Time: -1,
       });
       const product = await cursor.toArray();
