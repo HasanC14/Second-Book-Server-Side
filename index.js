@@ -75,6 +75,27 @@ async function run() {
       const product = await cursor.toArray();
       res.send(product);
     });
+    //Admin Route
+    app.get("/users/admin/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email };
+      const user = await UsersCollection.findOne(query);
+      res.send({ isAdmin: user?.role === "admin" });
+    });
+    //Buyer Route
+    app.get("/users/admin/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email };
+      const user = await UsersCollection.findOne(query);
+      res.send({ isAdmin: user?.role === "buyer" });
+    });
+    //Seller Route
+    app.get("/users/admin/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email };
+      const user = await UsersCollection.findOne(query);
+      res.send({ isAdmin: user?.role === "seller" });
+    });
   } finally {
   }
 }
