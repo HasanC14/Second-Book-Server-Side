@@ -27,10 +27,16 @@ async function run() {
       .collection("Categories");
 
     //All Categories
-    app.get("/allCategories", async (req, res) => {
+    app.get("/categories", async (req, res) => {
       let query = {};
       const Categories = await CategoriesCollection.find(query).toArray();
       res.send(Categories);
+    });
+    //Add User
+    app.post("/addUser", async (req, res) => {
+      const User = req.body;
+      const result = await DoctorsCollection.insertOne(User);
+      res.send(result);
     });
   } finally {
   }
