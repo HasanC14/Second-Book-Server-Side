@@ -35,7 +35,13 @@ async function run() {
     //Add User
     app.post("/addUser", async (req, res) => {
       const User = req.body;
-      const result = await DoctorsCollection.insertOne(User);
+      const result = await UsersCollection.insertOne(User);
+      res.send(result);
+    });
+    //Add Product
+    app.post("/addProduct", async (req, res) => {
+      const User = req.body;
+      const result = await ProductCollection.insertOne(User);
       res.send(result);
     });
   } finally {
