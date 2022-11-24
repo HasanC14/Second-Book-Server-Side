@@ -44,6 +44,25 @@ async function run() {
       const result = await ProductCollection.insertOne(User);
       res.send(result);
     });
+    //Category Specific Books
+    app.get("/CategoryBooks/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { Category_id: id };
+      const result = await ProductCollection.find(query).toArray();
+      res.send(result);
+    });
+    //Seller Products
+    app.get("/SellerProducts", async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = { SellerEmail: req.query.email };
+      }
+      const cursor = ReviewCollection.find(query).sort({
+        Time: -1,
+      });
+      const product = await cursor.toArray();
+      res.send(product);
+    });
   } finally {
   }
 }
