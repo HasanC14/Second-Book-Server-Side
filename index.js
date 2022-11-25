@@ -103,6 +103,7 @@ async function run() {
       const result = await UsersCollection.deleteOne(query);
       res.send(result);
     });
+
     //Verify Seller
     app.patch("/seller/verify/:id", async (req, res) => {
       const id = req.params.id;
@@ -118,6 +119,47 @@ async function run() {
         UpdatedDoc,
         option
       );
+      res.send(result);
+    });
+    //Advertise A Product
+    app.patch("/product/ad/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const option = { upsert: true };
+      const UpdatedDoc = {
+        $set: {
+          advertise: "true",
+        },
+      };
+      const result = await ProductCollection.updateOne(
+        filter,
+        UpdatedDoc,
+        option
+      );
+      res.send(result);
+    });
+    //Cancel Advertisement
+    app.patch("/product/adcancel/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const option = { upsert: true };
+      const UpdatedDoc = {
+        $set: {
+          advertise: "false",
+        },
+      };
+      const result = await ProductCollection.updateOne(
+        filter,
+        UpdatedDoc,
+        option
+      );
+      res.send(result);
+    });
+    //Delete Product
+    app.delete("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await ProductCollection.deleteOne(query);
       res.send(result);
     });
     //Seller Verification Checking
