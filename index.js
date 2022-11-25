@@ -103,6 +103,32 @@ async function run() {
       const result = await UsersCollection.deleteOne(query);
       res.send(result);
     });
+    //Verify Seller
+    app.patch("/seller/verify/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const option = { upsert: true };
+      const UpdatedDoc = {
+        $set: {
+          Verify: "true",
+        },
+      };
+      const result = await UsersCollection.updateOne(
+        filter,
+        UpdatedDoc,
+        option
+      );
+      res.send(result);
+    });
+    //Seller Verification Checking
+    app.get("/seller", async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = { email: req.query.email };
+      }
+      const user = await UsersCollection.findOne(query);
+      res.send(user);
+    });
   } finally {
   }
 }
