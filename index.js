@@ -22,6 +22,7 @@ async function run() {
   try {
     const UsersCollection = client.db("SecondBook").collection("Users");
     const ProductCollection = client.db("SecondBook").collection("Products");
+    const OrderCollection = client.db("SecondBook").collection("Orders");
     const CategoriesCollection = client
       .db("SecondBook")
       .collection("Categories");
@@ -170,6 +171,12 @@ async function run() {
       }
       const user = await UsersCollection.findOne(query);
       res.send(user);
+    });
+    //Place Order
+    app.post("/placeorder", async (req, res) => {
+      const order = req.body;
+      const result = await OrderCollection.insertOne(order);
+      res.send(result);
     });
   } finally {
   }
