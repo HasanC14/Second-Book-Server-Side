@@ -178,6 +178,35 @@ async function run() {
       const result = await OrderCollection.insertOne(order);
       res.send(result);
     });
+    //Book product
+    app.patch("/product/booked/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const option = { upsert: true };
+      const UpdatedDoc = {
+        $set: {
+          Booked: "true",
+        },
+      };
+      const result = await ProductCollection.updateOne(
+        filter,
+        UpdatedDoc,
+        option
+      );
+      res.send(result);
+    });
+    //Buyer Orders
+    app.get("/BuyerOrders", async (req, res) => {
+      let query = {};
+      if (req.query.email) {
+        query = { BuyerEmail: req.query.email };
+      }
+      const cursor = OrderCollection.find(query).sort({
+        Time: -1,
+      });
+      const product = await cursor.toArray();
+      res.send(product);
+    });
   } finally {
   }
 }
