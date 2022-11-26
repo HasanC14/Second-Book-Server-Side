@@ -207,6 +207,12 @@ async function run() {
       const product = await cursor.toArray();
       res.send(product);
     });
+    //Advertise Product
+    app.get("/advertisement", async (req, res) => {
+      query = { advertise: "true" };
+      const product = await ProductCollection.find(query).toArray();
+      res.send(product);
+    });
   } finally {
   }
 }
