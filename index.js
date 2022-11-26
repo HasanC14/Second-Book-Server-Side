@@ -70,10 +70,11 @@ async function run() {
       if (req.query.email) {
         query = { SellerEmail: req.query.email };
       }
-      const cursor = ProductCollection.find(query).sort({
-        Time: -1,
-      });
-      const product = await cursor.toArray();
+      const product = await ProductCollection.find(query)
+        .sort({
+          Time: -1,
+        })
+        .toArray();
       res.send(product);
     });
     //Admin Route
@@ -210,6 +211,29 @@ async function run() {
     //Advertise Product
     app.get("/advertisement", async (req, res) => {
       query = { advertise: "true" };
+      const product = await ProductCollection.find(query).toArray();
+      res.send(product);
+    });
+    //Report A Product
+    app.patch("/product/Report/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const option = { upsert: true };
+      const UpdatedDoc = {
+        $set: {
+          Report: "true",
+        },
+      };
+      const result = await ProductCollection.updateOne(
+        filter,
+        UpdatedDoc,
+        option
+      );
+      res.send(result);
+    });
+    //Advertise Product
+    app.get("/reported", async (req, res) => {
+      query = { Report: "true" };
       const product = await ProductCollection.find(query).toArray();
       res.send(product);
     });
