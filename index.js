@@ -2,16 +2,18 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require("cors");
-const stripe = require("stripe")(
-  "sk_test_51M8qqCKkUSsdEEDqKYNFFfcF0vpVVquA2l5mLu0ZFkOvEnkidt7fhPYbxjPj52xTCv49PSXJeuZ6zaQ9G6YqfChQ00CMB4WtdI"
-);
-//var jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+// const stripe = require("stripe")(
+//   "sk_test_51M8qqCKkUSsdEEDqKYNFFfcF0vpVVquA2l5mLu0ZFkOvEnkidt7fhPYbxjPj52xTCv49PSXJeuZ6zaQ9G6YqfChQ00CMB4WtdI"
+// );
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+// var jwt = require("jsonwebtoken");
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 app.use(cors());
 app.use(express.json());
-require("dotenv").config();
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@back-prac-2-admin.sldkkq5.mongodb.net/?retryWrites=true&w=majority`;
 
