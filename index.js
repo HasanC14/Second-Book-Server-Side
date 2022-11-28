@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require("cors");
+const stripe = require("stripe")(
+  "sk_test_51M8qqCKkUSsdEEDqKYNFFfcF0vpVVquA2l5mLu0ZFkOvEnkidt7fhPYbxjPj52xTCv49PSXJeuZ6zaQ9G6YqfChQ00CMB4WtdI"
+);
 //var jwt = require("jsonwebtoken");
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -22,6 +25,7 @@ async function run() {
   try {
     const UsersCollection = client.db("SecondBook").collection("Users");
     const ProductCollection = client.db("SecondBook").collection("Products");
+    const PaymentCollection = client.db("SecondBook").collection("Payment");
     const OrderCollection = client.db("SecondBook").collection("Orders");
     const CategoriesCollection = client
       .db("SecondBook")
@@ -34,7 +38,7 @@ async function run() {
       res.send(Categories);
     });
     //Add User
-    app.post("/addUser", async (req, res) => {
+    app.put("/addUser", async (req, res) => {
       const User = req.body;
       const result = await UsersCollection.insertOne(User);
       res.send(result);
@@ -236,6 +240,65 @@ async function run() {
       query = { Report: "true" };
       const product = await ProductCollection.find(query).toArray();
       res.send(product);
+    });
+    //Product Payment
+    app.get("/ProductPayment/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await OrderCollection.findOne(query);
+      res.send(result);
+    });
+    app.post("/create-payment-intent", async (req, res) => {
+      const Price = req.body.price;
+      const amount = Price * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: "usd",
+        amount: amount,
+        payment_method_types: ["card"],
+      });
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
+    });
+    //Add Payment
+    app.post("/addPayment", async (req, res) => {
+      const payment = req.body;
+      const result = await PaymentCollection.insertOne(payment);
+      res.send(result);
+    });
+    //Paid Status on Product
+    app.patch("/product/paid/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const option = { upsert: true };
+      const UpdatedDoc = {
+        $set: {
+          Paid: "true",
+        },
+      };
+      const result = await ProductCollection.updateOne(
+        filter,
+        UpdatedDoc,
+        option
+      );
+      res.send(result);
+    });
+    //Paid Status on Order
+    app.patch("/order/paid/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const option = { upsert: true };
+      const UpdatedDoc = {
+        $set: {
+          Paid: "true",
+        },
+      };
+      const result = await OrderCollection.updateOne(
+        filter,
+        UpdatedDoc,
+        option
+      );
+      res.send(result);
     });
   } finally {
   }
