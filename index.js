@@ -4,9 +4,6 @@ const port = process.env.PORT || 5000;
 const cors = require("cors");
 require("dotenv").config();
 
-// const stripe = require("stripe")(
-//   "sk_test_51M8qqCKkUSsdEEDqKYNFFfcF0vpVVquA2l5mLu0ZFkOvEnkidt7fhPYbxjPj52xTCv49PSXJeuZ6zaQ9G6YqfChQ00CMB4WtdI"
-// );
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 // var jwt = require("jsonwebtoken");
 
